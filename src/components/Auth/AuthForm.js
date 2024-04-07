@@ -20,40 +20,46 @@ const AuthForm = () => {
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
 
+    let url;
     if (isLogin) {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAT-nlXCzkCnocMGFkyoCe5NNLSABbvfQQ";
     } else {
-      fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAT-nlXCzkCnocMGFkyoCe5NNLSABbvfQQ",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            email: enteredEmail,
-            password: enteredPassword,
-            returnSecureToken: true,
-          }),
-          headers: {
-            "Content-Type": "application/json", // so that API knows that json data is coming
-          },
-        }
-      )
-        .then((res) => {
-          if (res.ok) {
-          } else {
-            return res.json().then((data) => {
-              // console.log(data);
-              // console.log(data.error.message);
-              throw new Error(data.error.message); // it is used to create a new Error object with the error message received from the server (data.error.message). This error is thrown to signal that an error occurred during the API request.
-            });
-          }
-        })
-        .catch((error) => {
-          // console.error("Error:", error);
-          alert(error.message); // Displays the error message from the Error object (error) in an alert dialog box.
-        })
-        .finally(() => {
-          setIsLoading(false); // the finally block ensures that the setIsLoading(false) statement is executed after the fetch request completes, regardless of whether the request was successful, encountered an error, or was rejected.
-        });
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAT-nlXCzkCnocMGFkyoCe5NNLSABbvfQQ";
     }
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        email: enteredEmail,
+        password: enteredPassword,
+        returnSecureToken: true,
+      }),
+      headers: {
+        "Content-Type": "application/json", // so that API knows that json data is coming
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json(); // If the response is successful, this statement returns a promise that resolves with the JSON representation of the response body. In other words, it converts the response body into JSON format.
+        } else {
+          return res.json().then((data) => { // The first .then() block returns a promise that resolves with the JSON data extracted from the response body.
+            // console.log(data);
+            // console.log(data.error.message);
+            throw new Error(data.error.message); // it is used to create a new Error object with the error message received from the server (data.error.message). This error is thrown to signal that an error occurred during the API request.
+          });
+        }
+      }).then((data)=>{  // The second .then() block allows you to handle this resolved JSON data, providing you with access to it for further processing or actions.
+        console.log(data);
+      })
+      .catch((error) => {
+        // console.error("Error:", error);
+        alert(error.message); // Displays the error message from the Error object (error) in an alert dialog box.
+      })
+      .finally(() => {
+        setIsLoading(false); // the finally block ensures that the setIsLoading(false) statement is executed after the fetch request completes, regardless of whether the request was successful, encountered an error, or was rejected.
+      });
+
     // setIsLoading(false);
   };
 
