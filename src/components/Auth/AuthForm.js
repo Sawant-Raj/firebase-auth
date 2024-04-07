@@ -1,10 +1,12 @@
-import { useState, useRef } from "react";
-
+import { useState, useRef, useContext } from "react";
 import classes from "./AuthForm.module.css";
+import AuthContext from "../../store/auth-context";
 
 const AuthForm = () => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+
+  const authCtx = useContext(AuthContext);
 
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,14 +45,20 @@ const AuthForm = () => {
         if (res.ok) {
           return res.json(); // If the response is successful, this statement returns a promise that resolves with the JSON representation of the response body. In other words, it converts the response body into JSON format.
         } else {
-          return res.json().then((data) => { // The first .then() block returns a promise that resolves with the JSON data extracted from the response body.
+          return res.json().then((data) => {
+            // The first .then() block returns a promise that resolves with the JSON data extracted from the response body.
             // console.log(data);
             // console.log(data.error.message);
             throw new Error(data.error.message); // it is used to create a new Error object with the error message received from the server (data.error.message). This error is thrown to signal that an error occurred during the API request.
+            // data object ke andar error (first purple) key which has nested object which has a message key
           });
         }
-      }).then((data)=>{  // The second .then() block allows you to handle this resolved JSON data, providing you with access to it for further processing or actions.
-        console.log(data);
+      })
+      .then((data) => {
+        // The second .then() block allows you to handle this resolved JSON data, providing you with access to it for further processing or actions.
+        
+        // console.log(data);
+        authCtx.login(data.idToken);
       })
       .catch((error) => {
         // console.error("Error:", error);
