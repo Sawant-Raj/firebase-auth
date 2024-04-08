@@ -58,10 +58,10 @@ const AuthForm = () => {
       })
       .then((data) => {
         // The second .then() block allows you to handle this resolved JSON data, providing you with access to it for further processing or actions.
-        
+
         // console.log(data);
         authCtx.login(data.idToken);
-        navigate('/'); // Redirect to the "/" route
+        navigate("/"); // Redirect to the "/" route
       })
       .catch((error) => {
         // console.error("Error:", error);
@@ -71,6 +71,8 @@ const AuthForm = () => {
         setIsLoading(false); // the finally block ensures that the setIsLoading(false) statement is executed after the fetch request completes, regardless of whether the request was successful, encountered an error, or was rejected.
       });
 
+    // emailInputRef.current.value = "";
+    // passwordInputRef.current.value = "";
     // setIsLoading(false);
   };
 

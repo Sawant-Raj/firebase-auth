@@ -10,16 +10,19 @@ const AuthContext = React.createContext({
 
 // exporting AuthContextProvider as a named export
 export const AuthContextProvider = (props) => {
-  const [token, setToken] = useState(null); // empty string bhi use kr skte hain in place of null
+  const initalToken=localStorage.getItem("token");
+  const [token, setToken] = useState(initalToken); // empty string bhi use kr skte hain in place of null. If you use null, it typically means that the state hasn't been initialized with any meaningful value yet. It's often used to represent the absence of a value or an uninitialized state. If you use an empty string, it means that the state has been initialized with an empty value.
 
   const userIsLoggedIn = !!token; // if token is a non-empty string, it will return true otherwise false
 
   const loginHandler = (token) => {
     setToken(token);
+    localStorage.setItem("token", token);
   };
 
   const logoutHandler = () => {
     setToken(null);
+    localStorage.removeItem("token");
   };
 
   const contextValue = {
